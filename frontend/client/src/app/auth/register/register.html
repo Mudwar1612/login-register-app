@@ -1,0 +1,18 @@
+<h2>Register</h2>
+<input [(ngModel)]="username" placeholder="username">
+<input [(ngModel)]="email" placeholder="email">
+<input [(ngModel)]="password" type="password" placeholder="password">
+@if (errorMessage) {
+    <p>
+        {{errorMessage}}
+    </p>
+}
+<button (click)="register()" [disabled]="loading">
+    {{loading ? 'loading...' : 'Register'}}
+</button>
+
+<br>
+<p>
+    Sudah punya akun?
+    <a routerLink="/">Login</a>
+</p>

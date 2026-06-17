@@ -1,0 +1,15 @@
+<h2>Login</h2>
+<input [(ngModel)]="username" placeholder="username">
+<input [(ngModel)]="password" type="password" placeholder="password">
+@if (errorMessage) {
+    <p>
+        {{errorMessage}}
+    </p>
+}
+<button (click)="login()" [disabled]="loading">
+    {{loading ? 'Loading...' : 'Login'}}
+</button>
+
+<br>
+
+<a routerLink="/register">register</a>
