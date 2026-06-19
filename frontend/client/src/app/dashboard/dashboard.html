@@ -1,4 +1,18 @@
-<h1>Dashboard</h1>
-<h2>Welcome {{user?.username}}</h2>
+<h1 class="text-4xl font-bold text-blue-600">Dashboard</h1>
+<h2 class="mt-4 text-gray-600">Welcome {{user?.username}}</h2>
 <p>Email : {{user?.email}}</p>
+
+<button (click)="editMode=true" *ngIf="!editMode">
+    Edit Profile
+</button>
+<div *ngIf="editMode">
+    <input [(ngModel)]="editUser.username" placeholder="username">
+    <input [(ngModel)]="editUser.email" placeholder="email">
+    <button (click)="updateProfile()">
+        Save
+    </button>
+    <button (click)="editMode=false">
+        Cancel
+    </button>
+</div>
 <button (click)="logout()">Logout</button>

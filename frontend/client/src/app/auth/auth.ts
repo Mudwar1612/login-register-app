@@ -36,9 +36,18 @@ export class Auth {
     );
   }
 
-  logout(){
-    localStorage.removeItem(
-      'access'
+  refreshToken(){
+    const refresh = 
+    localStorage.getItem('refresh');
+    return this.http.post(
+      this.api + 'token/refresh/',{
+        refresh:refresh
+      }
     );
+  }
+
+  logout(){
+    localStorage.removeItem('access');
+    localStorage.removeItem('refresh');
   }
 }

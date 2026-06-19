@@ -1,15 +1,12 @@
-<h2>Login</h2>
-<input [(ngModel)]="username" placeholder="username">
-<input [(ngModel)]="password" type="password" placeholder="password">
-@if (errorMessage) {
-    <p>
-        {{errorMessage}}
-    </p>
-}
-<button (click)="login()" [disabled]="loading">
-    {{loading ? 'Loading...' : 'Login'}}
-</button>
-
-<br>
-
-<a routerLink="/register">register</a>
+<div class="h-55 flex flex-col justify-center">
+    <input class="w-full border border-gray-300 rounded-lg p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-black" [(ngModel)]="username" placeholder="username">
+    <input class="w-full border border-gray-300 rounded-lg p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-black" [(ngModel)]="password" type="password" placeholder="password">
+    @if (errorMessage) {
+        <p class="text-red-500 text-sm mb-3">
+            {{errorMessage}}
+        </p>
+    }
+    <button class="w-full bg-black text-white py-3 rounded-lg transition hover:opacity-80" (click)="login()" [disabled]="loading">
+        {{loading ? 'Loading...' : 'Login'}}
+    </button>
+</div>

@@ -1,16 +1,19 @@
 import { Component, ChangeDetectorRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { NgClass } from "@angular/common";
 import { RouterLink } from "@angular/router";
+
 
 import { Auth } from '../auth';
 
 @Component({
   selector: 'app-register',
-  imports: [FormsModule, RouterLink],
+  imports: [FormsModule, NgClass, RouterLink],
   templateUrl: './register.html',
   styleUrl: './register.css',
 })
 export class Register {
+  step=1;
   username='';
   email='';
   password='';
@@ -18,6 +21,19 @@ export class Register {
   errorMessage='';
 
   constructor(private auth:Auth, private cd:ChangeDetectorRef){}
+  
+  next(){
+    if(this.step < 3){
+      this.step++;
+    }
+  }
+
+  back(){
+    if(this.step > 1){
+      this.step--;
+    }
+  }
+  
   register(){
     if(
       !this.username ||

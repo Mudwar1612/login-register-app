@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
-import { RouterLink, Router } from "@angular/router";
+import { Router } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 
 import { Auth } from '../auth';
 
 @Component({
   selector: 'app-login',
-  imports: [RouterLink, FormsModule],
+  imports: [FormsModule],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
@@ -38,7 +38,8 @@ export class Login {
 
     .subscribe({
         next:(res:any)=>{
-        this.auth.saveToken(res.access);
+        localStorage.setItem('access', res.access);
+        localStorage.setItem('refresh', res.refresh);
         console.log('SUCCESS:', res);
         this.loading=false;
         this.router.navigate(['/dashboard']);
