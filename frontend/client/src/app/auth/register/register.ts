@@ -1,7 +1,7 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectorRef, NgZone } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgClass } from "@angular/common";
-import { RouterLink } from "@angular/router";
+import { RouterLink, Router} from "@angular/router";
 
 
 import { Auth } from '../auth';
@@ -17,12 +17,37 @@ export class Register {
   username='';
   email='';
   password='';
+  showPassword = false;
   loading=false;
   errorMessage='';
 
-  constructor(private auth:Auth, private cd:ChangeDetectorRef){}
+  constructor(private auth:Auth, private cd:ChangeDetectorRef, private router:Router, private zone:NgZone){}
   
   next(){
+
+    this.errorMessage = '';
+
+    if(this.step === 1){
+      if (!this.email) {
+        this.errorMessage = 'Email wajib diisi';
+        return;
+      }
+    }
+
+    if(this.step === 2){
+      if(!this.username){
+        this.errorMessage = 'Username wajib diisi';
+        return;
+      }
+    }
+
+    if (this.step === 3){
+      if (!this.password){
+        this.errorMessage = 'Password wajib diisi';
+        return;
+      }
+    }
+
     if(this.step < 3){
       this.step++;
     }
@@ -36,12 +61,10 @@ export class Register {
   
   register(){
     if(
-      !this.username ||
-      !this.email ||
       !this.password
     ){
       this.errorMessage =
-      'Semua data wajib diisi';
+      'Password wajib diisi';
       return;
     }
 
@@ -57,12 +80,16 @@ export class Register {
     .subscribe({
       next:(res)=>{
         this.loading=false;
-        alert('Register berhasil');
+        alert('Register berhasil, Silahkan login!');
 
         this.username='';
         this.email='';
         this.password='';
+        this.step=1;
         this.cd.detectChanges();
+        this.zone.run(() => {
+          this.router.navigate(['/']);
+        });
       },
 
       error:(err)=>{

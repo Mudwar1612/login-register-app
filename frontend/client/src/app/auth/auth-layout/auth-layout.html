@@ -8,25 +8,23 @@
             <!-- SEARCH + LANGUAGE -->
             <div class="flex items-center gap-5">
                 <!-- SEARCH BAR -->
-                <div class="flex items-center bg-gray-100 rounded-full px-4 py-2 w-48">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 104.5 4.5a7.5 7.5 0 0012.15 12.15z"/>
-                    </svg>
-                    <input type="text" placeholder="Search" class="bg-transparent outline-none text-sm w-full">
+                <div class="flex items-center bg-gray-100 border border-gray-200 rounded-full px-4 py-2 w-48 transition-all duration-300 focus-within:border-black focus-within:bg-gray-100 focus-within:shadow-sm">
+                    <i class="bi bi-search text-sm text-gray-500 mr-2 transition-colors duration-300 group-focus-within:text-black"></i>
+                    <input type="text" placeholder="Search" class="bg-transparent outline-none text-sm w-full text-gray-700 placeholder-gray-400">
                 </div>
                 <div class="relative w-41">
                     <!-- CURRENT LANGUAGE -->
-                    <button (click)="dropdownOpen = !dropdownOpen" class="w-41 text-sm text-gray-700 bg-transparent cursor-pointer flex items-center justify-between">
-                        {{selectedLanguage}}
-                        <span class="flextext-xs">▼</span>
+                    <button (click)="dropdownOpen = !dropdownOpen" class="group w-full text-sm font-medium text-gray-700 bg-transparent cursor-pointer flex items-center justify-between py-1.5 hover:text-black">
+                        <span>{{selectedLanguage}}</span>
+                        <i class="bi bi-chevron-down text-xs transition-transform duration-300" [class.rotate-[-180deg]]="dropdownOpen"></i>
                     </button>
                     <!-- DROPDOWN MENU -->
                     @if(dropdownOpen){
                     <div
-                    class="absolute right-0 mt-3 w-45 bg-white rounded-xl shadow-lg border border-gray-100 p-2z-50">
+                    class="absolute right-0 mt-3 w-45 bg-white rounded-xl shadow-lg border border-gray-100 p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200 origin-top-right">
                         @for(lang of languages; track lang){
                             @if(lang !== selectedLanguage){
-                            <button (click)="changeLanguage(lang)" class="w-full text-left px-4 py-2 rounded-lg text-sm hover:bg-gray-100 transition">
+                            <button (click)="changeLanguage(lang)" class="w-full text-left px-4 py-2 rounded-lg text-sm text-gray-600 hover:text-black hover:bg-gray-50 transition-colors duration-200">
                                 {{lang}}
                             </button>
                             }
@@ -34,15 +32,15 @@
                     </div>
                     }
                 </div>
-                <button routerLink="/" class="px-5 py-2 rounded-lg border border-gray-300">Log In</button>
-                <button routerLink="/register" class="px-5 py-2 rounded-lg bg-black text-white">Register</button>
+                <button routerLink="/" class="px-5 py-2 rounded-lg border border-gray-300 bg-transparent text-gray-700 font-medium transition-colors duration-300 hover:bg-gray-100 hover:text-black hover:border-gray-400">Log In</button>
+                <button routerLink="/register" class="px-5 py-2 rounded-lg bg-black text-white font-medium border border-transparent transition-colors duration-300  hover:bg-white hover:text-black hover:border-black">Register</button>
             </div>
         </div>
     </nav>
     <!-- CONTENT -->
     <div class="w-full min-h-[calc(100vh-60px)] bg-[url('/background.jpg')] bg-cover bg-center bg-no-repeat flex items-center justify-start p-5">
         <!-- CARD -->
-        <div class="w-120 h-130 bg-white/5 backdrop-blur-3xl rounded-3xl shadow-2xl m-6 p-10 border border-white/30">
+        <div class=" w-120 h-130 bg-white/5 backdrop-blur-3xl rounded-3xl shadow-2xl m-6 p-10 border border-white/30">
             <h1 class="font-semibold text-5xl mb-3">Design with us <br> Explore with us</h1>
             <p class="text-justify">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi lobortis maximus nunc, ac rhoncus odio congue quis. Sed ac semper orci, eu porttitor lacus.</p>
             <router-outlet></router-outlet>

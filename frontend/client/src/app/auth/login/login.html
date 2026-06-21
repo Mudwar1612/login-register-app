@@ -6,7 +6,18 @@
             {{errorMessage}}
         </p>
     }
-    <button class="w-full bg-black text-white py-3 rounded-lg transition hover:opacity-80" (click)="login()" [disabled]="loading">
-        {{loading ? 'Loading...' : 'Login'}}
+    <button class="w-full bg-black text-white py-3 rounded-lg font-medium transition-all duration-300 border-2 border-transparent flex items-center justify-center min-h-13 hover:bg-gray-800 hover:text-white hover:border-transparent disabled:bg-black disabled:text-white disabled:border-transparent disabled:cursor-not-allowed" (click)="login()" [disabled]="loading">
+        @if (!loading) {
+            <span>Login</span>
+        } @else {
+            <span class="flex items-center justify-center">
+                <span>Loading</span>
+                <span class="flex ml-0.5 w-6 text-left">
+                    <span class="animate-[pulse_1.2s_infinite] [animation-delay:0s]">.</span>
+                    <span class="opacity-0 animate-[pulse_1.2s_infinite] [animation-delay:0.3s]">.</span>
+                    <span class="opacity-0 animate-[pulse_1.2s_infinite] [animation-delay:0.6s]">.</span>
+                </span>
+            </span>
+        }
     </button>
 </div>
