@@ -4,46 +4,43 @@ import { HttpClient } from '@angular/common/http';
 @Injectable({
   providedIn: 'root',
 })
+
 export class Auth {
   private api ='http://127.0.0.1:8000/api/';
 
   constructor(private http: HttpClient){}
 
-  register(data:any){
-    return this.http.post(
-      this.api + 'register/',
-      data
-    );
+  register(data:any) {
+    return this.http.post(this.api + 'register/', data);
   }
 
-  login(data:any){
-    return this.http.post(
-      this.api + 'login/',
-      data
-    );
+  sendOtp(email:string) {
+    return this.http.post(`${this.api}send-otp/`, {email: email} );
   }
 
-  saveToken(token:string){
-    localStorage.setItem(
-      'access',
-      token
-    );
+  verifyOtp(email:string, otp:string) {
+    return this.http.post(`${this.api}verify-otp/`, {email:email, otp:otp} );
   }
 
-  getToken(){
-    return localStorage.getItem(
-      'access'
-    );
+  checkUsername(username:string) {
+    return this.http.post(`${this.api}check-username/`, {username:username} );
   }
 
-  refreshToken(){
-    const refresh = 
-    localStorage.getItem('refresh');
-    return this.http.post(
-      this.api + 'token/refresh/',{
-        refresh:refresh
-      }
-    );
+  login(data:any) {
+    return this.http.post(this.api + 'login/', data);
+  }
+
+  saveToken(token:string) {
+    localStorage.setItem('access', token);
+  }
+
+  getToken() {
+    return localStorage.getItem('access');
+  }
+
+  refreshToken() {
+    const refresh =  localStorage.getItem('refresh');
+    return this.http.post(this.api + 'token/refresh/', {refresh:refresh} );
   }
 
   logout(){

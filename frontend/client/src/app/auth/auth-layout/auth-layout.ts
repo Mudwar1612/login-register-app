@@ -7,18 +7,15 @@ import { RouterOutlet, RouterLink } from "@angular/router";
   templateUrl: './auth-layout.html',
   styleUrl: './auth-layout.css',
 })
+
 export class AuthLayout {
   selectedLanguage = 'English (United States)';
 
-  languages = [
-    'English (United States)',
-    'Indonesia',
-    'Japanese'
-  ];
+  languages = ['English (United States)', 'Indonesia', 'Japanese'];
 
   dropdownOpen = false;
 
-  changeLanguage(lang:string){
+  changeLanguage (lang:string) {
     this.selectedLanguage = lang;
     this.dropdownOpen = false;
   }

@@ -3,65 +3,68 @@
         <i class="bi bi-arrow-bar-left"></i>
     </a>
     <div class="w-96">
-        <!-- TITLE -->
         <h1 class="text-3xl font-semibold text-center mb-2">Create an account</h1>
         <p class="text-sm text-gray-500 text-center mb-10">
             Already have an account?
             <a routerLink="/" class="underline cursor-pointer">Log in</a>
         </p>
-       <!-- STEP -->
         <div class="flex items-start justify-center mb-8">
-            <!-- STEP 1 -->
             <div class="flex flex-col items-center w-32">
-                <span class="w-5 h-5 rounded-full text-[10px] flex items-center justify-center transition-colors duration-300" [ngClass]="errorMessage && step === 1 ?  'bg-red-500 text-white' :step === 1 ? 'bg-black text-white' : 'bg-gray-300 text-white'">1</span>
-                <span class="mt-3 text-[11px] text-center transition-colors duration-300" [ngClass]="errorMessage && step === 1 ? 'text-red-500' :step === 1 ? 'text-black font-semibold' : 'text-gray-400'">Enter your email address</span>
+                <span class="w-5 h-5 rounded-full text-[10px] flex items-center justify-center transition-colors duration-300" [ngClass]="errorMessage && step === 1 ?  'bg-red-500 text-white' : step >= 1 ? 'bg-black text-white' : 'bg-gray-300 text-white'">1</span>
+                <span class="mt-3 text-[11px] text-center transition-colors duration-300" [ngClass]="errorMessage && step === 1 ? 'text-red-500' : step >= 1 ? 'text-black font-semibold' : 'text-gray-400'">Enter your email address</span>
             </div>
-            <div class="w-20 h-px bg-gray-300 mt-2"></div>
-            <!-- STEP 2 -->
+            <div class="w-20 h-px mt-2 rounded-full" [ngClass]="step > 1 ? 'progress-active' : 'progress-default'"></div>
             <div class="flex flex-col items-center w-32">
-                <span class="w-5 h-5 rounded-full text-[10px] flex items-center justify-center transition-colors duration-300" [ngClass]="errorMessage && step === 2 ? 'bg-red-500 text-white' :step === 2 ? 'bg-black text-white' : 'bg-gray-300 text-white'">2</span>
-                <span class="mt-3 text-[11px] text-center transition-colors duration-300" [ngClass]="errorMessage && step === 2 ? 'text-red-500' :step === 2 ? 'text-black font-semibold' : 'text-gray-400'">Provide your basic info</span>
+                <span class="w-5 h-5 rounded-full text-[10px] flex items-center justify-center transition-colors duration-300" [ngClass]="errorMessage && step === 2 ? 'bg-red-500 text-white' : step >= 2 ? 'bg-black text-white' : 'bg-gray-300 text-white'">2</span>
+                <span class="mt-3 text-[11px] text-center transition-colors duration-300" [ngClass]="errorMessage && step === 2 ? 'text-red-500' : step >= 2 ? 'text-black font-semibold' : 'text-gray-400'">Provide your basic info</span>
             </div>
-            <div class="w-20 h-px bg-gray-300 mt-2"></div>
-            <!-- STEP 3 -->
+            <div class="w-20 h-px mt-2 rounded-full" [ngClass]="step > 2 ? 'progress-active' : 'progress-default'"></div>
             <div class="flex flex-col items-center w-32">
                 <span class="w-5 h-5 rounded-full text-[10px] flex items-center justify-center transition-colors duration-300"[ngClass]="errorMessage && step === 3 ? 'bg-red-500 text-white' :step === 3 ? 'bg-black text-white' : 'bg-gray-300 text-white'">3</span>
                 <span class="mt-3 text-[11px] text-center transition-colors duration-300" [ngClass]="errorMessage && step === 3 ? 'text-red-500' :step === 2 ? 'text-black font-semibold' : 'text-gray-400'">Create your password</span>
             </div>
         </div>
-        <!-- STEP 1 -->
-        @if(step === 1){
+        @if (step === 1) {
             <label class="text-sm">What's your email?</label>
             <input class="w-full mt-2 border rounded-lg p-3" placeholder="Enter your email address" [(ngModel)]="email">
+            <label class="text-sm mt-5 block">Verification Code</label>
+            <input class="w-full mt-2 border rounded-lg p-3 text-center tracking-widest" placeholder="Enter OTP" maxlength="6" [(ngModel)]="otp">
+            @if (otpSent) {
+                <div class="mt-3 flex items-center justify-center gap-2 text-sm text-gray-500">
+                    <i class="bi bi-clock"></i>
+                    <span>
+                        OTP berlaku 
+                        <b class="text-black">
+                            {{formatTimer()}}
+                        </b>
+                    </span>
+                </div>
+            } 
         }
-        <!-- STEP 2 -->
-        @if(step === 2){
+        @if (step === 2) {
             <label class="text-sm">Username</label>
             <input class="w-full mt-2 border rounded-lg p-3" placeholder="Username" [(ngModel)]="username">
         }
-        <!-- STEP 3 -->
-        @if(step === 3){
+        @if (step === 3) {
             <label class="text-sm">Password</label>
             <div class="relative mt-2">
                 <input [type]="showPassword ? 'text' : 'password'" class="w-full border rounded-lg p-3 pr-12" placeholder="Password" [(ngModel)]="password">
                 <button type="button" (click)="showPassword = !showPassword" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-black">
-                    @if (showPassword){
+                    @if (showPassword) {
                       <i class="bi bi-eye"></i>  
-                    }@else{
+                    } @else {
                         <i class="bi bi-eye-slash"></i>
                     }
                 </button>
             </div>
         }
-        @if(errorMessage){
+        @if (errorMessage) {
             <p class="text-red-500 text-center text-sm mt-3">
                 {{errorMessage}}
             </p>
         }
-        <!-- NAVIGASI BUTTON -->
         <div class="flex gap-3 mt-6">
-            <!-- Tombol Back: Hanya muncul di step 2 dan 3 -->
-            @if(step > 1) {
+            @if (step > 1) {
                 <button (click)="back()" class="group w-1/2 border border-black text-black py-3 rounded-xl font-medium transition-all hover:bg-black hover:text-white hover:border-black hover:text-bold">
                     <span class="flex items-center justify-center font-medium transition-all duration-300 group-hover:font-bold">
                         <i class="bi bi-arrow-left mr-1 inline-block transition-transform duration-300 group-hover:-translate-x-1.5"></i>
@@ -69,11 +72,9 @@
                     </span>
                 </button>
             }
-            
-            <!-- Tombol Next / Create Account -->
-            <button (click)="step === 3 ? register() : next()" class="group bg-black text-white py-3 font-medium border-2 border-transparent rounded-lg transition-all duration-300 hover:bg-white hover:text-black hover:border-black hover:text-bold" [ngClass]="step === 1 ? 'w-full' : 'w-1/2'">
+            <button (click)="step === 3 ? register() : step === 1 && !otpSent ? sendOtp() : next()" class="group bg-black text-white py-3 font-medium border-2 border-transparent rounded-lg transition-all duration-300 hover:bg-white hover:text-black hover:border-black hover:text-bold" [ngClass]="step === 1 ? 'w-full' : 'w-1/2'">
                 <span class="flex items-center justify-center font-medium transition-all duration-300 group-hover:font-bold">
-                    <span>{{step === 3 ? 'Create Account' : 'Next'}}</span>
+                    <span>{{step === 3 ? 'Create Account' : step === 1 && !otpSent ? 'Send Verification' : 'Next'}}</span>
                     <i class="bi bi-arrow-right ml-1 inline-block transition-transform duration-300 group-hover:translate-x-1.5"></i>
                 </span>
             </button>

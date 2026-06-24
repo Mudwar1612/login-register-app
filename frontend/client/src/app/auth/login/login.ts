@@ -10,50 +10,48 @@ import { Auth } from '../auth';
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
+
 export class Login {
-  username= '';
-  password= '';
-  loading=false;
-  errorMessage='';
+  username = '';
+  password = '';
+  loading = false;
+  errorMessage = '';
 
-  constructor(private auth:Auth, private router:Router){}
+  constructor (private auth:Auth, private router:Router) {}
 
-  login(){
-    if(!this.username || !this.password){
+  login() {
+    if (!this.username || !this.password) {
       this.errorMessage = 'Username dan Password wajib diisi';
       return;
     }
 
-    this.loading=true;
-    this.errorMessage='';
+    this.loading = true;
+    this.errorMessage = '';
 
-    const data={
-      username:this.username,
-      password:this.password
+    const data = {
+      username: this.username,
+      password: this.password
     };
 
-    console.log('KIRIM DATA:', data);
+    this.auth.login (data)
 
-    this.auth.login(data)
-
-    .subscribe({
-        next:(res:any)=>{
-        localStorage.setItem('access', res.access);
-        localStorage.setItem('refresh', res.refresh);
-        console.log('SUCCESS:', res);
-        this.loading=false;
-        this.router.navigate(['/dashboard']);
+    .subscribe ( {
+      next: (res:any) => {
+        localStorage.setItem ('access', res.access);
+        localStorage.setItem ('refresh', res.refresh);
+        console.log ('SUCCESS:', res);
+        this.loading = false;
+        this.router.navigate (['/dashboard']);
       },
 
-      error:(err)=>{
-        console.log('STATUS:', err.status);
-        console.log('BODY:', err.error);
-        
-        this.loading=false;
+      error: (err) => {
+        console.log ('STATUS:', err.status);
+        console.log ('BODY:', err.error);
+        this.loading = false;
         this.errorMessage = err.error?.detail || 'Username atau Password salah';
       },
 
-      complete:()=> {
+      complete : () => {
         this.loading=false;
       },
     });

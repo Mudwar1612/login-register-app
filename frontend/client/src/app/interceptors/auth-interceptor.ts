@@ -4,23 +4,21 @@ import { throwError } from "rxjs";
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const token = localStorage.getItem('access');
-  let request=req;
+  let request = req;
   if (token) {
     request = req.clone({
-      setHeaders:{
-        Authorization: `Bearer ${token}`
-      }
+      setHeaders: {Authorization: `Bearer ${token}`}
     });
   }
 
   return next(request).pipe(
-    catchError(error=>{
-      if (error.status===401){
+    catchError(error => {
+      if (error.status===401) {
         localStorage.removeItem('access');
         localStorage.removeItem('refresh');
-        window.location.href='/';
+        window.location.href = '/';
       }
-      return throwError(()=>error);
+      return throwError( () => error);
     })
   );
 };

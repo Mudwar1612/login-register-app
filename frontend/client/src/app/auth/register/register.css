@@ -1,0 +1,33 @@
+.progress-default {
+    background-image: repeating-linear-gradient(
+        to right,
+        #e2e8f0 0px,
+        #e2e8f0 6px,
+        transparent 6px,
+        transparent 12px
+    );
+    background-size: 12px 100%;
+}
+
+
+.progress-active {
+    background-image: repeating-linear-gradient(
+        to right,
+        black 0px,
+        black 6px,
+        transparent 6px,
+        transparent 12px
+    );
+    background-size: 24px 100%;
+    animation: dashMove 1s linear infinite;
+}
+
+
+@keyframes dashMove {
+    from {
+        background-position: 0 0;
+    }
+    to {
+        background-position: 24px 0;
+    }
+}

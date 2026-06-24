@@ -11,43 +11,40 @@ import { CommonModule } from "@angular/common";
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })
-export class Dashboard implements OnInit{
-  user:any;
 
-  editMode=false;
-  editUser:any = {};
+export class Dashboard implements OnInit {
+  user: any;
+  editMode = false;
+  editUser: any = {};
 
-  constructor(private auth:Auth, private router:Router, private profile:Profile, private cd:ChangeDetectorRef){}
+  constructor(private auth:Auth, private router:Router, private profile:Profile, private cd:ChangeDetectorRef) {}
 
-  ngOnInit(){
+  ngOnInit() {
     this.profile.getProfile()
-    .subscribe({
-      next:(data:any)=>{
-        this.user=data;
-        this.editUser={...data};
+    .subscribe ( {
+      next: (data:any) => {
+        this.user = data;
+        this.editUser = {...data};
         this.cd.detectChanges();
       },
-      error:(err)=>{
-      }
+      error: (err) => {}
     });
   }
 
-  logout(){
+  logout() {
     this.auth.logout();
-    this.router.navigate([
-      '/'
-    ]);
+    this.router.navigate( ['/'] );
   }
 
-  updateProfile(){
+  updateProfile() {
     this.profile.updateProfile(this.editUser)
-    .subscribe({
-      next:(res:any)=>{
-        this.user=res;
-        this.editMode=false;
+    .subscribe ( {
+      next: (res:any) => {
+        this.user = res;
+        this.editMode = false;
         alert('Profile Updated');
       },
-      error:(err)=>{
+      error: (err) => {
         console.log(err);
         alert('Update Gagal');
       }
