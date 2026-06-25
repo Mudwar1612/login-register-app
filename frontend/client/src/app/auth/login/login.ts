@@ -37,11 +37,15 @@ export class Login {
 
     .subscribe ( {
       next: (res:any) => {
-        localStorage.setItem ('access', res.access);
-        localStorage.setItem ('refresh', res.refresh);
-        console.log ('SUCCESS:', res);
+        this.auth.saveSession(res);
         this.loading = false;
-        this.router.navigate (['/dashboard']);
+        if (res.role === 'admin') {
+          console.log('SUCCESS:', res);
+          this.router.navigate([ '/admin' ]);
+        } else {
+          console.log('SUCCESS:', res);
+          this.router.navigate([ '/dashboard' ]);
+        }
       },
 
       error: (err) => {

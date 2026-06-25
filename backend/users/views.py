@@ -2,20 +2,26 @@ import random
 
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
+
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
+from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.response import Response
 from rest_framework import status
-from.serializers import RegisterSerializer
-from.serializers import ProfileSerializer
-from .models import EmailOTP
+
+from .models import EmailOTP, UserProfile
+from .serializers import RegisterSerializer, ProfileSerializer, MyTokenObtainPairSerializer, AdminUserSerializer
 
 class RegisterView(APIView):
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
 
         if serializer.is_valid():
-            serializer.save()
+            user = serializer.save()
+            UserProfile.objects.create(
+                user=user,
+                role='user'
+            )
             return Response(
                 {
                     "message":
@@ -143,3 +149,24 @@ class ProfileView(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=400)
+    
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
+
+class AdminUserListView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+
+    def get(self, request):
+
+        users = User.objects.all()
+
+        serializer = AdminUserSerializer(
+            users,
+            many=True
+        )
+
+        return Response(
+            serializer.data
+        )

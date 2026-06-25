@@ -1,0 +1,24 @@
+
+<div class="min-h-screen min-w-full flex flex-col bg-gray-50">
+    <nav class="h-16 bg-white flex items-center justify-between px-10 shadow-sm z-10">
+        <div class="flex items-center w-1/4">
+            <span class="font-bold text-lg tracking-wider text-black">DASHBOARD</span>
+        </div>
+        <div class="flex justify-center w-2/4">
+            <div class="flex items-center bg-gray-100 border border-gray-200 rounded-full px-4 py-2 w-64 transition-all duration-300 focus-within:border-black focus-within:bg-white focus-within:shadow-sm group">
+                <i class="bi bi-search text-sm text-gray-400 mr-2 transition-colors duration-300 group-focus-within:text-black"></i>
+                <input type="text" placeholder="Search" class="bg-transparent outline-none text-sm w-full text-gray-700 placeholder-gray-400">
+            </div>
+        </div>
+        <div class="flex items-center justify-end gap-4 text-sm w-1/4">
+            <button (click)="logout()" 
+                    class="px-5 py-2 rounded-lg bg-black text-white font-medium border border-transparent transition-colors duration-300 hover:bg-white hover:text-black hover:border-black">
+                Log Out
+            </button>
+        </div>
+    </nav>
+    <div class="w-full flex-1 bg-[url('/background.jpg')] bg-cover bg-center bg-no-repeat flex items-center justify-center p-6 relative">
+        <h1>Halaman Management Admin</h1>
+        <p>Selamat datang di panel kendali admin.</p>
+    </div>
+</div>
