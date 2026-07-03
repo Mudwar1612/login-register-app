@@ -69,4 +69,10 @@ export class Auth {
     this.api + 'admin/users/'
     );
   }
+
+  getOtp(){
+    return this.http.get(
+      this.api + 'admin/otp/'
+    );
+  }
 }

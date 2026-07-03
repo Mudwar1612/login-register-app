@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from .models import EmailOTP, UserProfile
-from .serializers import RegisterSerializer, ProfileSerializer, MyTokenObtainPairSerializer, AdminUserSerializer
+from .serializers import RegisterSerializer, ProfileSerializer, MyTokenObtainPairSerializer, AdminUserSerializer, EmailOTPSerializer
 
 class RegisterView(APIView):
     def post(self, request):
@@ -170,3 +170,17 @@ class AdminUserListView(APIView):
         return Response(
             serializer.data
         )
+
+class AdminOTPListView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+
+        if request.user.userprofile.role != 'admin':
+            return Response(status=403)
+
+        data = EmailOTP.objects.all().order_by('-created_at')
+
+        serializer = EmailOTPSerializer(data, many=True)
+
+        return Response(serializer.data)

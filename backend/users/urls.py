@@ -6,7 +6,8 @@ from .views import (
     SendOTPView, 
     VerifyOTPView, 
     CheckUsernameView, 
-    AdminUserListView
+    AdminUserListView,
+    AdminOTPListView
     )
 
 urlpatterns = [
@@ -16,4 +17,5 @@ urlpatterns = [
     path('check-username/', CheckUsernameView.as_view()),
     path('profile/', ProfileView.as_view()),
     path('admin/users/', AdminUserListView.as_view()),
+    path('admin/otp/', AdminOTPListView.as_view()),
 ]

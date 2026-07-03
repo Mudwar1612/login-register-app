@@ -1,7 +1,9 @@
-
 <div class="min-h-screen min-w-full flex flex-col bg-gray-50">
     <nav class="h-16 bg-white flex items-center justify-between px-10 shadow-sm z-10">
-        <div class="flex items-center w-1/4">
+        <div class="flex items-center gap-4">
+            <button (click)="toggleSidebar()" class="text-2xl font-bold">
+                <i class="bi bi-list"></i>
+            </button>
             <span class="font-bold text-lg tracking-wider text-black">DASHBOARD</span>
         </div>
         <div class="flex justify-center w-2/4">
@@ -17,8 +19,112 @@
             </button>
         </div>
     </nav>
-    <div class="w-full flex-1 bg-[url('/background.jpg')] bg-cover bg-center bg-no-repeat flex items-center justify-center p-6 relative">
-        <h1>Halaman Management Admin</h1>
-        <p>Selamat datang di panel kendali admin.</p>
+    @if(sidebarOpen){
+        <div class="fixed top-16 left-0 h-[calc(100vh-64px)] w-72 bg-white shadow-xl border-r z-50">
+            <div class="p-6">
+                <h2 class="font-bold text-xl">
+                    {{user?.username}}
+                </h2>
+                <p class="text-gray-500 text-sm mt-1">
+                    {{user?.email}}
+                </p>
+            </div>
+            <hr>
+            <div class="mt-3">
+                <button
+                (click)="changeMenu('dashboard')"
+                class="w-full text-left px-6 py-3 hover:bg-gray-100"
+                [ngClass]="activeMenu==='dasboard' ? 'bg-black' : 'hover:bg-gray-100'">
+                    Dashboard
+                </button>
+                <button
+                (click)="changeMenu('users')"
+                class="w-full text-left px-6 py-3 hover:bg-gray-100"
+                [ngClass]="activeMenu==='users' ? 'bg-black' : 'hover:bg-gray-100'">
+                    Kelola User
+                </button>
+                <button
+                (click)="changeMenu('otp')"
+                class="w-full text-left px-6 py-3 hover:bg-gray-100"
+                [ngClass]="activeMenu==='otp' ? 'bg-black' : 'hover:bg-gray-100'">
+                    Kelola OTP
+                </button>
+            </div>
+        </div>
+    }
+    <div class="w-full flex-1 bg-gray-100 p-8">
+        @if (activeMenu == 'dashboard') {
+            <h1 class="text-3xl font-bold">
+                Dashboard
+            </h1>
+        }
+        @if(activeMenu == 'users'){
+            <div class="bg-white rounded-xl shadow p-6">
+                <h2 class="text-2xl font-bold mb-6">Kelola User</h2>
+                <table class="w-full border-collapse">
+                    <thead>
+                        <tr class="bg-gray-100">
+                            <th class="p-3 border">ID</th>
+                            <th class="p-3 border">Username</th>
+                            <th class="p-3 border">Email</th>
+                            <th class="p-3 border">Role</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for(item of users; track item.id){
+                            <tr>
+                                <td class="border p-3">
+                                    {{item.id}}
+                                </td>
+                                <td class="border p-3">
+                                    {{item.username}}
+                                </td>
+                                <td class="border p-3">
+                                    {{item.email}}
+                                </td>
+                                <td class="border p-3">
+                                    {{item.role}}
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        @if(activeMenu=='otp'){
+            <div class="bg-white rounded-xl shadow p-6">
+                <h2 class="text-2xl font-bold mb-6">
+                    Kelola OTP
+                </h2>
+                <table class="w-full border-collapse">
+                    <thead>
+                        <tr class="bg-gray-100">
+                            <th class="border p-3">ID</th>
+                            <th class="border p-3">Email</th>
+                            <th class="border p-3">OTP</th>
+                            <th class="border p-3">Tanggal Dibuat</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for(item of otpList; track item.id){
+                        <tr>
+                            <td class="border p-3">
+                                {{item.id}}
+                            </td>
+                            <td class="border p-3">
+                                {{item.email}}
+                            </td>
+                            <td class="border p-3">
+                                {{item.otp}}
+                            </td>
+                            <td class="border p-3">
+                                {{item.created_at}}
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
     </div>
 </div>

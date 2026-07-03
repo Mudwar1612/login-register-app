@@ -12,3 +12,6 @@ frontend/client/.angular/
 
 # Environment
 .env
+
+# VS-Code
+.vscode

@@ -3,7 +3,7 @@ from rest_framework import serializers
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
-from .models import UserProfile
+from .models import UserProfile, EmailOTP
 
 
 class RegisterSerializer(serializers.ModelSerializer) :
@@ -78,3 +78,15 @@ class AdminUserSerializer(serializers.ModelSerializer):
         except UserProfile.DoesNotExist:
 
             return "user"
+        
+class EmailOTPSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = EmailOTP
+
+        fields = [
+            'id',
+            'email',
+            'otp',
+            'created_at'
+        ]
