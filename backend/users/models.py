@@ -32,6 +32,14 @@ class UserProfile(models.Model):
         default='user'
     )
 
+    is_suspended = models.BooleanField(
+        default=False
+    )
+
+    suspended_until = models.DateTimeField(
+        null=True,
+        blank=True
+    )
 
     def __str__(self):
         return self.user.username

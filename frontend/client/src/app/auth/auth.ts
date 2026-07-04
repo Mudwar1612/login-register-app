@@ -70,6 +70,23 @@ export class Auth {
     );
   }
 
+  updateUser (id:number, data:any) {
+    return this.http.put(
+      this.api + 'admin/users/' + id + '/',
+      data
+    );
+  }
+
+  suspendUsers(ids:any,days:number) {
+    return this.http.post(
+      this.api + 'admin/users/suspend/',
+      {
+        users:ids,
+        days:days
+      }
+    );
+  }
+
   getOtp(){
     return this.http.get(
       this.api + 'admin/otp/'

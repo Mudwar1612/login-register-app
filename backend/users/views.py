@@ -9,8 +9,11 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.response import Response
 from rest_framework import status
 
+from datetime import timedelta
+from django.utils import timezone
+
 from .models import EmailOTP, UserProfile
-from .serializers import RegisterSerializer, ProfileSerializer, MyTokenObtainPairSerializer, AdminUserSerializer, EmailOTPSerializer
+from .serializers import (RegisterSerializer, ProfileSerializer, MyTokenObtainPairSerializer, AdminUserSerializer, EmailOTPSerializer, AdminUserUpdateSerializer)
 
 class RegisterView(APIView):
     def post(self, request):
@@ -170,6 +173,96 @@ class AdminUserListView(APIView):
         return Response(
             serializer.data
         )
+    
+class AdminUserDetailView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def put(self, request, id):
+
+        if request.user.userprofile.role != 'admin':
+
+            return Response(
+                {
+                    "message":"Forbidden"
+                },
+                status=403
+            )
+
+        user = User.objects.filter(
+            id=id
+        ).first()
+
+        if not user:
+
+            return Response(
+                {
+                    "message":"User tidak ditemukan"
+                },
+                status=404
+            )
+
+        serializer = AdminUserUpdateSerializer(
+            user,
+            data=request.data,
+            partial=True
+        )
+
+        if serializer.is_valid():
+
+            serializer.save()
+
+            return Response(
+                {
+                    "message":"User berhasil diupdate"
+                }
+            )
+
+        return Response(
+            serializer.errors,
+            status=400
+        )
+    
+class AdminSuspendUserView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+
+        if request.user.userprofile.role != 'admin':
+
+            return Response(
+                {
+                    "message":"Forbidden"
+                },
+                status=403
+            )
+
+        ids = request.data.get("users", [])
+
+        days = int(request.data.get("days", 15))
+
+        for user in User.objects.filter(id__in=ids):
+
+            if user.userprofile.role == "admin":
+                continue
+
+            profile = user.userprofile
+
+            profile.is_suspended = True
+
+            profile.suspended_until = (
+                timezone.now()
+                + timedelta(days=days)
+            )
+
+            profile.save()
+
+        return Response({
+
+            "message":"User berhasil disuspend"
+
+        })
 
 class AdminOTPListView(APIView):
     permission_classes = [IsAuthenticated]

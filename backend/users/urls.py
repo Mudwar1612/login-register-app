@@ -7,7 +7,9 @@ from .views import (
     VerifyOTPView, 
     CheckUsernameView, 
     AdminUserListView,
-    AdminOTPListView
+    AdminOTPListView,
+    AdminUserDetailView,
+    AdminSuspendUserView,
     )
 
 urlpatterns = [
@@ -18,4 +20,6 @@ urlpatterns = [
     path('profile/', ProfileView.as_view()),
     path('admin/users/', AdminUserListView.as_view()),
     path('admin/otp/', AdminOTPListView.as_view()),
+    path('admin/users/<int:id>/', AdminUserDetailView.as_view()),
+    path('admin/users/suspend/', AdminSuspendUserView.as_view()),
 ]

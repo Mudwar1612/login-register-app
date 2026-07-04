@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { Router } from "@angular/router";
 import { FormsModule } from "@angular/forms";
 
@@ -17,7 +17,7 @@ export class Login {
   loading = false;
   errorMessage = '';
 
-  constructor (private auth:Auth, private router:Router) {}
+  constructor (private auth:Auth, private router:Router, private cdr: ChangeDetectorRef ) {}
 
   login() {
     if (!this.username || !this.password) {
@@ -39,24 +39,23 @@ export class Login {
       next: (res:any) => {
         this.auth.saveSession(res);
         this.loading = false;
+        this.cdr.detectChanges();
         if (res.role === 'admin') {
-          console.log('SUCCESS:', res);
           this.router.navigate([ '/admin' ]);
         } else {
-          console.log('SUCCESS:', res);
           this.router.navigate([ '/dashboard' ]);
         }
       },
 
-      error: (err) => {
-        console.log ('STATUS:', err.status);
-        console.log ('BODY:', err.error);
+      error: (err:any) => {
         this.loading = false;
         this.errorMessage = err.error?.detail || 'Username atau Password salah';
+        this.cdr.detectChanges();
       },
 
       complete : () => {
         this.loading=false;
+        this.cdr.detectChanges(); 
       },
     });
   }
