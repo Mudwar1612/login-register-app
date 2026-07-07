@@ -1,7 +1,7 @@
 import { Component, ChangeDetectorRef, NgZone } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { NgClass } from "@angular/common";
-import { RouterLink, Router} from "@angular/router";
+import { NgClass } from '@angular/common';
+import { RouterLink, Router } from '@angular/router';
 import { interval, Subscription } from 'rxjs';
 
 import { Auth } from '../auth';
@@ -12,7 +12,6 @@ import { Auth } from '../auth';
   templateUrl: './register.html',
   styleUrl: './register.css',
 })
-
 export class Register {
   step = 1;
   username = '';
@@ -21,16 +20,20 @@ export class Register {
   showPassword = false;
   loading = false;
   errorMessage = '';
-  otp:string = '';
+  otp: string = '';
   otpSent = false;
   emailVerified = false;
   timer = 0;
   timerInterval: any;
   timerSubscription?: Subscription;
 
+  constructor(
+    private auth: Auth,
+    private cd: ChangeDetectorRef,
+    private router: Router,
+    private zone: NgZone,
+  ) {}
 
-  constructor(private auth:Auth, private cd:ChangeDetectorRef, private router:Router, private zone:NgZone) {}
-  
   sendOtp() {
     if (!this.email) {
       this.errorMessage = 'Email wajib diisi';
@@ -42,8 +45,7 @@ export class Register {
       return;
     }
 
-    this.auth.sendOtp (this.email)
-    .subscribe ( {
+    this.auth.sendOtp(this.email).subscribe({
       next: (res) => {
         this.otpSent = true;
         this.errorMessage = '';
@@ -52,21 +54,20 @@ export class Register {
 
       error: (err) => {
         this.errorMessage = 'Gagal mengirim OTP';
-      }
-    });  
+      },
+    });
   }
 
   formatTimer() {
-    const minutes = Math.floor (this.timer / 60);
+    const minutes = Math.floor(this.timer / 60);
     const seconds = this.timer % 60;
-    return `${minutes}:${seconds < 10 ? '0': ''}${seconds}`;
+    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
   }
 
   startTimer() {
     this.timer = 180;
     this.timerSubscription?.unsubscribe();
-    this.timerSubscription = interval (1000)
-    .subscribe( () => {
+    this.timerSubscription = interval(1000).subscribe(() => {
       this.timer--;
       this.cd.detectChanges();
       if (this.timer <= 0) {
@@ -101,14 +102,10 @@ export class Register {
         return;
       }
       if (this.otp.length !== 6) {
-        this.errorMessage='OTP harus 6 digit';
+        this.errorMessage = 'OTP harus 6 digit';
         return;
       }
-      this.auth.verifyOtp (
-        this.email,
-        this.otp
-      )
-      .subscribe ({
+      this.auth.verifyOtp(this.email, this.otp).subscribe({
         next: (res) => {
           this.emailVerified = true;
           this.stopTimer();
@@ -117,9 +114,8 @@ export class Register {
           this.cd.detectChanges();
         },
         error: (err) => {
-          this.errorMessage =
-          err.error.message;
-        }
+          this.errorMessage = err.error.message;
+        },
       });
       return;
     }
@@ -129,8 +125,7 @@ export class Register {
         this.errorMessage = 'Username wajib diisi';
         return;
       }
-      this.auth.checkUsername(this.username)
-      .subscribe ( {
+      this.auth.checkUsername(this.username).subscribe({
         next: (res) => {
           this.errorMessage = '';
           this.step = 3;
@@ -140,7 +135,7 @@ export class Register {
         error: (err) => {
           this.errorMessage = err.error.message || 'Username sudah ada';
           this.cd.detectChanges();
-        }
+        },
       });
       return;
     }
@@ -167,23 +162,22 @@ export class Register {
       return;
     }
   }
-  
+
   register() {
     if (!this.password) {
-      this.errorMessage ='Password wajib diisi';
+      this.errorMessage = 'Password wajib diisi';
       return;
     }
 
     this.loading = true;
     this.errorMessage = '';
     const data = {
-      username:this.username,
-      email:this.email,
-      password:this.password
+      username: this.username,
+      email: this.email,
+      password: this.password,
     };
 
-    this.auth.register(data)
-    .subscribe ( {
+    this.auth.register(data).subscribe({
       next: (res) => {
         this.loading = false;
         alert('Register berhasil, Silahkan login!');
@@ -192,15 +186,15 @@ export class Register {
         this.password = '';
         this.step = 1;
         this.cd.detectChanges();
-        this.zone.run ( () => {
+        this.zone.run(() => {
           this.router.navigate(['/']);
         });
       },
-      
+
       error: (err) => {
-        this.loading=false;
+        this.loading = false;
         this.errorMessage = 'Register gagal';
-      }
+      },
     });
   }
 }

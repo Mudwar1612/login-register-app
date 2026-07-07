@@ -1,317 +1,762 @@
 <div class="min-h-screen min-w-full flex flex-col bg-gray-50">
-    <nav class="h-16 bg-white flex items-center justify-between px-10 shadow-sm z-10">
-        <div class="flex items-center gap-4">
-            <button (click)="toggleSidebar()" class="text-2xl font-bold">
-                <i class="bi bi-list"></i>
-            </button>
-            <span class="font-bold text-lg tracking-wider text-black">DASHBOARD</span>
-        </div>
-        <div class="flex justify-center w-2/4">
-            <div class="flex items-center bg-gray-100 border border-gray-200 rounded-full px-4 py-2 w-64 transition-all duration-300 focus-within:border-black focus-within:bg-white focus-within:shadow-sm group">
-                <i class="bi bi-search text-sm text-gray-400 mr-2 transition-colors duration-300 group-focus-within:text-black"></i>
-                <input [(ngModel)]="search" type="text" placeholder="Search" class="bg-transparent outline-none text-sm w-full text-gray-700 placeholder-gray-400">
-            </div>
-        </div>
-        <div class="flex items-center justify-end gap-4 text-sm w-1/4">
-            <button (click)="logout()" 
-                    class="px-5 py-2 rounded-lg bg-black text-white font-medium border border-transparent transition-colors duration-300 hover:bg-white hover:text-black hover:border-black">
-                Log Out
-            </button>
-        </div>
-    </nav>
-    @if(sidebarOpen){
-        <div class="fixed top-16 left-0 h-[calc(100vh-64px)] w-72 bg-white shadow-xl border-r z-50">
-            <div class="p-6">
-                <h2 class="font-bold text-xl">
-                    {{user?.username}}
-                </h2>
-                <p class="text-gray-500 text-sm mt-1">
-                    {{user?.email}}
-                </p>
-            </div>
-            <hr>
-            <div class="mt-3">
-                <button
-                (click)="changeMenu('dashboard')"
-                class="w-full text-left px-6 py-3 hover:bg-gray-100"
-                [ngClass]="activeMenu==='dasboard' ? 'bg-black' : 'hover:bg-gray-100'">
-                    Dashboard
-                </button>
-                <button
-                (click)="changeMenu('users')"
-                class="w-full text-left px-6 py-3 hover:bg-gray-100"
-                [ngClass]="activeMenu==='users' ? 'bg-black' : 'hover:bg-gray-100'">
-                    Kelola User
-                </button>
-                <button
-                (click)="changeMenu('otp')"
-                class="w-full text-left px-6 py-3 hover:bg-gray-100"
-                [ngClass]="activeMenu==='otp' ? 'bg-black' : 'hover:bg-gray-100'">
-                    Kelola OTP
-                </button>
-            </div>
-        </div>
-    }
-    <div class="w-full flex-1 bg-gray-100 p-8">
-        @if (activeMenu == 'dashboard') {
-            <h1 class="text-3xl font-bold">
-                Dashboard
-            </h1>
+  <nav
+    class="sticky top-0 w-full h-16 bg-white border-b border-gray-100 flex items-center justify-between px-6 md:px-8 shadow-sm z-50"
+  >
+    <div class="flex items-center gap-4">
+      <button
+        type="button"
+        (click)="toggleSidebar(); $event.stopPropagation()"
+        class="p-2 rounded-xl text-gray-600 hover:bg-black/5 hover:text-black transition-all duration-300 active:scale-95 flex items-center justify-center bg-transparent border-none relative w-10 h-10 overflow-hidden"
+        aria-label="Toggle Sidebar"
+      >
+        <i
+          class="bi bi-list text-2xl absolute transition-all duration-500 ease-in-out"
+          [class.rotate-180]="sidebarOpen"
+          [class.scale-0]="sidebarOpen"
+          [class.opacity-0]="sidebarOpen"
+        ></i>
+        <i
+          class="bi bi-x-lg text-xl absolute transition-all duration-500 ease-in-out scale-0 opacity-0 -rotate-180"
+          [class.rotate-0]="sidebarOpen"
+          [class.scale-100]="sidebarOpen"
+          [class.opacity-100]="sidebarOpen"
+        ></i>
+      </button>
+      <span class="font-bold text-lg tracking-wide text-gray-800 select-none">
+        @switch (activeMenu) {
+          @case ('dashboard') {
+            Dashboard
+          }
+          @case ('users') {
+            Kelola User
+          }
+          @case ('otp') {
+            Kelola OTP
+          }
         }
-        @if(activeMenu == 'users'){
-            <div class="bg-white rounded-xl shadow p-6">
-                <h2 class="text-2xl font-bold mb-6">Kelola User</h2>
-                <table class="w-full border-collapse">
-                    <thead>
-                        <tr class="bg-gray-100">
-                            <th class="p-3 border">
-                                <input type="checkbox" (change)="selectAll($event)">
-                            </th>
-                            <th class="p-3 border">ID</th>
-                            <th class="p-3 border">Username</th>
-                            <th class="p-3 border">Email</th>
-                            <th class="p-3 border">Role</th>
-                            <th class="p-3 border">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @for(item of filteredUsers; track item.id){
-                            <tr>
-                                <td class="border p-3">
-                                    <input type="checkbox" [checked]="selectedUsers.includes(item.id)" (change)="toggleUser(item.id)">
-                                </td>
-                                <td class="border p-3">
-                                    {{item.id}}
-                                </td>
-                                <td class="border p-3">
-                                    {{item.username}}
-                                </td>
-                                <td class="border p-3">
-                                    {{item.email}}
-                                </td>
-                                <td class="border p-3">
-                                    @if (item.role=="admin") {
-                                        <span class="bg-red-500 text-white px-3 py-1 rounded-full text-xs">
-                                            Admin
-                                        </span>
-                                    } @else {
-                                        <span class="bg-blue-500 text-white px-3 py-1 rounded-full text-xs">
-                                            User
-                                        </span>
-                                    }
-                                </td>
-                                <td class="border p-3 text-center">
-                                    @if(item.status == 'Active') {
-                                        <span
-                                        class="bg-green-500 text-white px-3 py-1 rounded-full text-xs">
-                                            Active
-                                        </span>
-                                    } @else {
-                                        <span
-                                        class="bg-red-500 text-white px-3 py-1 rounded-full text-xs">
-                                            Suspended
-                                        </span>
-                                    }
+      </span>
+    </div>
+    <div class="flex items-center justify-end gap-4 text-sm">
+      <button
+        (click)="logout()"
+        class="px-5 py-2.5 text-sm font-medium rounded-xl bg-black text-white border border-black transition-all duration-200 hover:bg-gray-50 hover:text-black shadow-sm active:scale-98"
+      >
+        Log Out
+      </button>
+    </div>
+  </nav>
+  <div
+    class="fixed top-16 left-0 h-[calc(100vh-64px)] w-72 bg-white shadow-xl border-r border-gray-100 z-50 flex flex-col justify-between transition-transform duration-500 ease-out transform -translate-x-full"
+    [class.translate-x-0]="sidebarOpen"
+  >
+    <div>
+      <div
+        class="p-6 bg-gray-50/50 transition-all duration-500 ease-out delay-150 transform -translate-y-4 opacity-0"
+        [class.translate-y-0]="sidebarOpen"
+        [class.opacity-100]="sidebarOpen"
+      >
+        <h2 class="font-bold text-lg text-gray-800 truncate">
+          {{ user?.username }}
+        </h2>
+        <p class="text-gray-500 text-xs mt-0.5 truncate">
+          {{ user?.email }}
+        </p>
+      </div>
 
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-                <div class="flex justify-end gap-3 mt-6">
-                    <button
-                    (click)="openEditModal()"
-                    [disabled]="selectedUsers.length!==1"
-                    class="px-5 py-2 rounded bg-yellow-500 text-white disabled:bg-gray-300">
-                        Edit
-                    </button>
-                        <button
-                        (click)="toggleSuspendMenu()"
-                        [disabled]="selectedUsers.length==0"
-                        class="px-5 py-2 rounded bg-orange-500 text-white disabled:bg-gray-300">
-                            Suspend ▼
-                        </button>
-                        @if(showSuspendMenu){
+      <hr class="border-gray-100" />
 
-                            <div
-                            class="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg border z-50">
-                                <button
-                                (click)="suspend(15)"
-                                class="w-full text-left px-4 py-2 hover:bg-gray-100">
-                                    Suspend 15 Hari
-                                </button>
-                                <button
-                                (click)="suspend(30)"
-                                class="w-full text-left px-4 py-2 hover:bg-gray-100">
-                                    Suspend 30 Hari
-                                </button>
-                                <button
-                                (click)="suspend(60)"
-                                class="w-full text-left px-4 py-2 hover:bg-gray-100">
-                                    Suspend 60 Hari
-                                </button>
-                            </div>
-                        }
-                    
-                    <button
-                    [disabled]="selectedUsers.length==0"
-                    class="px-5 py-2 rounded bg-red-600 text-white disabled:bg-gray-300">
-                        Delete
-                    </button>
-                </div>
-            </div>
-        }
-        @if(activeMenu=='otp'){
-            <div class="bg-white rounded-xl shadow p-6">
-                <h2 class="text-2xl font-bold mb-6">
-                    Kelola OTP
-                </h2>
-                <table class="w-full border-collapse">
-                    <thead>
-                        <tr class="bg-gray-100">
-                            <th class="border p-3">ID</th>
-                            <th class="border p-3">Email</th>
-                            <th class="border p-3">OTP</th>
-                            <th class="border p-3">Tanggal Dibuat</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @for(item of otpList; track item.id){
-                        <tr>
-                            <td class="border p-3">
-                                {{item.id}}
-                            </td>
-                            <td class="border p-3">
-                                {{item.email}}
-                            </td>
-                            <td class="border p-3">
-                                {{item.otp}}
-                            </td>
-                            <td class="border p-3">
-                                {{item.created_at}}
-                            </td>
-                        </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        }
+      <div
+        class="mt-4 px-3 space-y-1 transition-all duration-500 ease-out delay-300 transform -translate-y-6 opacity-0"
+        [class.translate-y-0]="sidebarOpen"
+        [class.opacity-100]="sidebarOpen"
+      >
+        <button
+          (click)="changeMenu('dashboard')"
+          class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200"
+          [ngClass]="
+            activeMenu === 'dashboard'
+              ? 'bg-black text-white shadow-md'
+              : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+          "
+        >
+          <i class="bi bi-speedometer2 mr-3 text-base"></i>Dashboard
+        </button>
+
+        <button
+          (click)="changeMenu('users')"
+          class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200"
+          [ngClass]="
+            activeMenu === 'users'
+              ? 'bg-black text-white shadow-md'
+              : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+          "
+        >
+          <i class="bi bi-people mr-3 text-base"></i>Kelola User
+        </button>
+
+        <button
+          (click)="changeMenu('otp')"
+          class="w-full text-left px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200"
+          [ngClass]="
+            activeMenu === 'otp'
+              ? 'bg-black text-white shadow-md'
+              : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+          "
+        >
+          <i class="bi bi-shield-lock mr-3 text-base"></i>Kelola OTP
+        </button>
+      </div>
     </div>
 
-    @if(showEditModal){
-
-        <div
-        class="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
-
-            <div class="bg-white rounded-xl shadow-lg p-8 w-112.5">
-
-                <h2 class="text-2xl font-bold mb-5">
-
-                    Edit User
-
-                </h2>
-
-                <div class="mb-4">
-
-                    <label>
-
-                        Username
-
-                    </label>
-
-                    <input
-
-                    [(ngModel)]="editData.username"
-
-                    class="w-full border rounded-lg p-2 mt-1">
-
-                </div>
-
-                <div class="mb-4">
-
-                    <label>
-
-                        Email
-
-                    </label>
-
-                    <input
-
-                    [(ngModel)]="editData.email"
-
-                    class="w-full border rounded-lg p-2 mt-1">
-
-                </div>
-
-                <div class="mb-4">
-
-                    <label>
-
-                        Role
-
-                    </label>
-
-                    <select
-
-                    [(ngModel)]="editData.role"
-
-                    class="w-full border rounded-lg p-2 mt-1">
-
-                        <option value="admin">
-
-                            Admin
-
-                        </option>
-
-                        <option value="user">
-
-                            User
-
-                        </option>
-
-                    </select>
-
-                </div>
-
-                <div class="mb-5">
-
-                    <label>
-
-                        Password Baru
-
-                    </label>
-
-                    <input
-
-                    [(ngModel)]="editData.password"
-
-                    type="password"
-
-                    placeholder="Kosongkan jika tidak diubah"
-
-                    class="w-full border rounded-lg p-2 mt-1">
-
-                </div>
-
-                <div class="flex justify-end gap-3">
-
-                    <button
-
-                    (click)="closeEditModal()"
-
-                    class="px-5 py-2 rounded bg-gray-300">
-
-                        Batal
-
-                    </button>
-
-                    <button
-                    (click)="saveUser()"
-                    class="px-5 py-2 rounded bg-black text-white">
-                        Simpan
-                    </button>
-                </div>
-            </div>
+    <div
+      class="p-4 border-t border-gray-100 bg-gray-50/30 transition-all duration-500 ease-out delay-500 transform translate-y-2 opacity-0"
+      [class.translate-y-0]="sidebarOpen"
+      [class.opacity-100]="sidebarOpen"
+    >
+      <p class="text-center text-[10px] text-gray-400 font-mono">v1.0.0</p>
+    </div>
+  </div>
+  <div class="w-full flex-1 bg-[url('/background.jpg')] bg-cover bg-center bg-no-repeat p-8">
+    @if (activeMenu == 'dashboard') {
+      <div class="space-y-6">
+        <div class="bg-white/70 backdrop-blur-md rounded-2xl shadow-xl p-6 border border-white/40">
+          <h1 class="text-3xl font-extrabold text-gray-900 tracking-tight">Dashboard</h1>
+          <p class="text-gray-600 mt-1.5 text-sm">
+            Ringkasan kondisi real-time sistem manajemen pengguna dan modul OTP.
+          </p>
         </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div
+            class="bg-white/70 backdrop-blur-md rounded-2xl shadow-xl p-5 border border-white/40 relative overflow-hidden group hover:scale-[1.02] transition-transform duration-300"
+          >
+            <div class="absolute top-0 left-0 w-1.5 h-full bg-blue-500"></div>
+            <p class="text-xs font-bold text-gray-500 uppercase tracking-wider">Total User</p>
+            <div class="flex items-baseline gap-2 mt-2">
+              <h2 class="text-4xl font-black text-gray-900">{{ totalUsers }}</h2>
+              <span class="text-xs text-gray-400 font-medium">Pengguna</span>
+            </div>
+          </div>
+
+          <div
+            class="bg-white/70 backdrop-blur-md rounded-2xl shadow-xl p-5 border border-white/40 relative overflow-hidden group hover:scale-[1.02] transition-transform duration-300"
+          >
+            <div class="absolute top-0 left-0 w-1.5 h-full bg-green-500"></div>
+            <p class="text-xs font-bold text-gray-500 uppercase tracking-wider">User Aktif</p>
+            <div class="flex items-baseline gap-2 mt-2">
+              <h2 class="text-4xl font-black text-green-700">{{ activeUsers }}</h2>
+              <span
+                class="inline-flex items-center gap-1 bg-green-50 text-green-700 text-[10px] font-bold px-1.5 py-0.5 rounded border border-green-200/50"
+              >
+                <span class="w-1 h-1 rounded-full bg-green-500 animate-pulse"></span> Normal
+              </span>
+            </div>
+          </div>
+
+          <div
+            class="bg-white/70 backdrop-blur-md rounded-2xl shadow-xl p-5 border border-white/40 relative overflow-hidden group hover:scale-[1.02] transition-transform duration-300"
+          >
+            <div class="absolute top-0 left-0 w-1.5 h-full bg-red-500"></div>
+            <p class="text-xs font-bold text-gray-500 uppercase tracking-wider">User Suspend</p>
+            <div class="flex items-baseline gap-2 mt-2">
+              <h2 class="text-4xl font-black text-red-700">{{ suspendUsers }}</h2>
+              <span
+                class="inline-flex items-center bg-red-50 text-red-700 text-[10px] font-bold px-1.5 py-0.5 rounded border border-red-200/50"
+              >
+                Dibatasi
+              </span>
+            </div>
+          </div>
+
+          <div
+            class="bg-white/70 backdrop-blur-md rounded-2xl shadow-xl p-5 border border-white/40 relative overflow-hidden group hover:scale-[1.02] transition-transform duration-300"
+          >
+            <div class="absolute top-0 left-0 w-1.5 h-full bg-gray-900"></div>
+            <p class="text-xs font-bold text-gray-500 uppercase tracking-wider">Total OTP</p>
+            <div class="flex items-baseline gap-2 mt-2">
+              <h2 class="text-4xl font-black text-gray-900">{{ totalOTP }}</h2>
+              <span class="text-xs text-gray-400 font-mono">Generations</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          <div
+            class="bg-white/70 backdrop-blur-md rounded-2xl shadow-xl p-6 border border-white/40"
+          >
+            <h3 class="font-bold text-gray-800 text-lg mb-4 flex items-center gap-2">
+              <span class="w-1 h-4 bg-black rounded"></span> Ringkasan Status OTP
+            </h3>
+
+            <div class="space-y-2 text-sm">
+              <div class="flex justify-between items-center py-3 border-b border-gray-200/50">
+                <span class="text-gray-600 font-medium">OTP Aktif (Sudah Dipakai)</span>
+                <span
+                  class="inline-flex items-center gap-1.5 bg-green-50 text-green-700 px-2.5 py-1 rounded-full text-xs font-bold border border-green-200/60"
+                >
+                  <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                  {{ usedOTP }}
+                </span>
+              </div>
+
+              <div class="flex justify-between items-center py-3">
+                <span class="text-gray-600 font-medium">OTP Expired / Hangus</span>
+                <span
+                  class="inline-flex items-center gap-1.5 bg-red-50 text-red-700 px-2.5 py-1 rounded-full text-xs font-bold border border-red-200/60"
+                >
+                  <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                  {{ activeOTP }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="bg-white/70 backdrop-blur-md rounded-2xl shadow-xl p-6 border border-white/40 flex flex-col justify-center"
+          >
+            <h3 class="font-bold text-gray-800 text-lg mb-4 flex items-center gap-2">
+              <span class="w-1 h-4 bg-black rounded"></span> Ringkasan Sistem
+            </h3>
+            <p class="text-gray-600 leading-relaxed text-sm">
+              Saat ini sistem memiliki
+              <span class="font-bold text-gray-900">{{ totalUsers }} User</span>, terdiri dari
+              <span
+                class="inline-block px-1.5 py-0.5 bg-green-50 text-green-700 font-semibold rounded text-xs border border-green-200/40"
+                >{{ activeUsers }} User Aktif</span
+              >
+              dan
+              <span
+                class="inline-block px-1.5 py-0.5 bg-red-50 text-red-700 font-semibold rounded text-xs border border-red-200/40"
+                >{{ suspendUsers }} User Suspend</span
+              >. Sementara itu, modul OTP mencatat total
+              <span class="font-bold text-gray-900">{{ totalOTP }} log pembuatan token</span>,
+              dengan rincian
+              <span class="text-green-600 font-bold">{{ activeOTP }} berstatus aktif</span> dan
+              <span class="text-red-500 font-bold">{{ usedOTP }} telah kedaluwarsa</span>.
+            </p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          <div
+            class="bg-white/70 backdrop-blur-md rounded-2xl shadow-xl p-6 border border-white/40"
+          >
+            <h3 class="font-bold text-gray-800 text-lg mb-4 flex items-center gap-2">
+              <span class="w-1 h-4 bg-blue-500 rounded"></span> Pendaftaran User Terbaru
+            </h3>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm text-left">
+                <thead>
+                  <tr
+                    class="border-b border-gray-200/60 text-gray-500 font-bold text-xs uppercase tracking-wider"
+                  >
+                    <th class="pb-3 align-middle">Username</th>
+                    <th class="pb-3 align-middle text-right">Role</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 text-gray-700">
+                  @for (item of latestUsers; track item.id) {
+                    <tr class="hover:bg-white/40 transition-colors">
+                      <td class="py-3 font-medium text-gray-900">{{ item.username }}</td>
+                      <td class="py-3 text-right">
+                        @if (item.role == 'admin') {
+                          <span
+                            class="inline-flex bg-red-50 text-red-700 px-2.5 py-0.5 rounded-full text-xs font-bold border border-red-200/60"
+                            >Admin</span
+                          >
+                        } @else {
+                          <span
+                            class="inline-flex bg-blue-50 text-blue-700 px-2.5 py-0.5 rounded-full text-xs font-bold border border-blue-200/60"
+                            >User</span
+                          >
+                        }
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div
+            class="bg-white/70 backdrop-blur-md rounded-2xl shadow-xl p-6 border border-white/40"
+          >
+            <h3 class="font-bold text-gray-800 text-lg mb-4 flex items-center gap-2">
+              <span class="w-1 h-4 bg-amber-500 rounded"></span> Aktivitas OTP Terbaru
+            </h3>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm text-left">
+                <thead>
+                  <tr
+                    class="border-b border-gray-200/60 text-gray-500 font-bold text-xs uppercase tracking-wider"
+                  >
+                    <th class="pb-3 align-middle">Email</th>
+                    <th class="pb-3 align-middle text-right">Status</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100 text-gray-700">
+                  @for (item of latestOTP; track item.id) {
+                    <tr class="hover:bg-white/40 transition-colors">
+                      <td class="py-3 font-medium text-gray-900 truncate max-w-45">
+                        {{ item.email }}
+                      </td>
+                      <td class="py-3 text-right">
+                        @if (item.is_used) {
+                          <span
+                            class="inline-flex items-center gap-1 bg-green-50 text-green-700 px-2.5 py-0.5 rounded-full text-xs font-bold border border-green-200/60"
+                          >
+                            <span class="w-1 h-1 rounded-full bg-green-500 animate-pulse"></span>
+                            Used
+                          </span>
+                        } @else {
+                          <span
+                            class="inline-flex items-center gap-1 bg-red-50 text-red-700 px-2.5 py-0.5 rounded-full text-xs font-bold border border-red-200/60"
+                          >
+                            <span class="w-1 h-1 rounded-full bg-red-500"></span> Expired
+                          </span>
+                        }
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
     }
+    @if (activeMenu == 'users') {
+      <div
+        class="bg-white/5 backdrop-blur-md rounded-2xl shadow-xl p-6 max-w-full border border-white/40"
+      >
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+          <h2 class="text-2xl font-bold text-gray-800">Kelola User</h2>
+
+          <div class="relative w-full md:w-72">
+            <div
+              class="flex items-center bg-gray-50 border border-gray-200 rounded-full px-4 py-2.5 transition-all duration-300 focus-within:border-black focus-within:bg-white focus-within:shadow-sm group"
+            >
+              <i
+                class="bi bi-search text-sm text-gray-400 mr-2 transition-colors duration-300 group-focus-within:text-black"
+              ></i>
+              <input
+                [(ngModel)]="search"
+                type="text"
+                placeholder="Search..."
+                class="bg-transparent outline-none text-sm w-full text-gray-700 placeholder-gray-400"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto border border-gray-100 rounded-lg">
+          <table class="w-full border-collapse text-left text-sm">
+            <thead>
+              <tr class="bg-gray-50 border-b border-gray-200 text-gray-600 font-semibold">
+                <th class="p-4 w-12 text-center">
+                  <input
+                    type="checkbox"
+                    (change)="selectAll($event)"
+                    class="rounded text-black focus:ring-black"
+                  />
+                </th>
+                <th class="p-4">ID</th>
+                <th class="p-4">Username</th>
+                <th class="p-4">Email</th>
+                <th class="p-4">Role</th>
+                <th class="p-4 text-center">Status</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100 text-gray-700">
+              @for (item of filteredUsers; track item.id) {
+                <tr class="hover:bg-gray-50/70 transition-colors">
+                  <td class="p-4 text-center">
+                    <input
+                      type="checkbox"
+                      [checked]="selectedUsers.includes(item.id)"
+                      (change)="toggleUser(item.id)"
+                      class="rounded text-black focus:ring-black"
+                    />
+                  </td>
+                  <td class="p-4 font-mono text-xs text-gray-500">{{ item.id }}</td>
+                  <td class="p-4 font-medium text-gray-900">{{ item.username }}</td>
+                  <td class="p-4 text-gray-500">{{ item.email }}</td>
+                  <td class="p-4">
+                    @if (item.role == 'admin') {
+                      <span
+                        class="inline-flex items-center bg-red-50 text-red-700 px-2.5 py-1 rounded-full text-xs font-medium border border-red-200"
+                      >
+                        Admin
+                      </span>
+                    } @else {
+                      <span
+                        class="inline-flex items-center bg-blue-50 text-blue-700 px-2.5 py-1 rounded-full text-xs font-medium border border-blue-200"
+                      >
+                        User
+                      </span>
+                    }
+                  </td>
+                  <td class="p-4 text-center">
+                    @if (item.status == 'Active') {
+                      <span
+                        class="inline-flex items-center bg-green-50 text-green-700 px-2.5 py-1 rounded-full text-xs font-medium border border-green-200"
+                      >
+                        Active
+                      </span>
+                    } @else {
+                      <span
+                        class="inline-flex items-center bg-amber-50 text-amber-700 px-2.5 py-1 rounded-full text-xs font-medium border border-amber-200"
+                      >
+                        Suspended
+                      </span>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <div class="flex flex-wrap justify-end gap-3 mt-6">
+          <button
+            (click)="openEditModal()"
+            [disabled]="selectedUsers.length !== 1"
+            class="px-5 py-2.5 text-sm font-medium rounded-lg bg-yellow-500 hover:bg-yellow-600 text-white transition-colors disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed"
+          >
+            Edit
+          </button>
+
+          <div class="relative">
+            <button
+              (click)="toggleSuspendMenu()"
+              [disabled]="selectedUsers.length == 0"
+              class="px-5 py-2.5 text-sm font-medium rounded-lg bg-orange-500 hover:bg-orange-600 text-white transition-colors disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed inline-flex items-center gap-1"
+            >
+              Suspend <span class="text-xs">▼</span>
+            </button>
+
+            @if (showSuspendMenu) {
+              <div
+                class="absolute right-0 mt-2 w-44 bg-white rounded-xl shadow-xl border border-gray-100 py-1 z-50 overflow-hidden transform origin-top-right"
+              >
+                <button
+                  (click)="suspend(15)"
+                  class="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                >
+                  Suspend 15 Hari
+                </button>
+                <button
+                  (click)="suspend(30)"
+                  class="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                >
+                  Suspend 30 Hari
+                </button>
+                <button
+                  (click)="suspend(60)"
+                  class="w-full text-left px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                >
+                  Suspend 60 Hari
+                </button>
+              </div>
+            }
+          </div>
+
+          <button
+            (click)="openDeleteModal()"
+            [disabled]="selectedUsers.length == 0"
+            class="px-5 py-2.5 text-sm font-medium rounded-lg bg-red-600 hover:bg-red-700 text-white transition-colors disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    }
+    @if (activeMenu == 'otp') {
+      <div
+        class="bg-white/5 backdrop-blur-md rounded-2xl shadow-xl p-6 max-w-full border border-white/40"
+      >
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+          <h2 class="text-2xl font-bold text-gray-800">Kelola OTP</h2>
+
+          <div class="relative w-full md:w-72">
+            <div
+              class="flex items-center bg-gray-50 border border-gray-200 rounded-full px-4 py-2.5 transition-all duration-300 focus-within:border-black focus-within:bg-white focus-within:shadow-sm group"
+            >
+              <i
+                class="bi bi-search text-sm text-gray-400 mr-2 transition-colors duration-300 group-focus-within:text-black"
+              ></i>
+              <input
+                type="text"
+                placeholder="Search..."
+                [(ngModel)]="searchOtp"
+                (input)="searchOTPData()"
+                class="bg-transparent outline-none text-sm w-full text-gray-700 placeholder-gray-400"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto border border-gray-100 rounded-lg">
+          <table class="w-full border-collapse text-left text-sm">
+            <thead>
+              <tr class="bg-gray-50 border-b border-gray-200 text-gray-600 font-semibold">
+                <th class="p-4 w-12 text-center align-middle">
+                  <input
+                    type="checkbox"
+                    [checked]="selectedOTP.length === filteredOTP.length && filteredOTP.length > 0"
+                    (change)="toggleAllOTP($event)"
+                    class="rounded text-black focus:ring-black"
+                  />
+                </th>
+                <th class="p-4">ID</th>
+                <th class="p-4">Email</th>
+                <th class="p-4">OTP Code</th>
+                <th class="p-4">Tanggal Dibuat</th>
+                <th class="p-4">Status</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100 text-gray-700">
+              @for (item of filteredOTP; track item.id) {
+                <tr class="hover:bg-gray-50/50 transition-colors duration-200">
+                  <td class="p-4 text-center">
+                    <input
+                      type="checkbox"
+                      [checked]="selectedOTP.includes(item.id)"
+                      (change)="toggleOTP(item.id, $event)"
+                      class="rounded text-black focus:ring-black cursor-pointer"
+                    />
+                  </td>
+
+                  <td class="p-4 font-mono text-xs text-gray-500 select-all">
+                    {{ item.id }}
+                  </td>
+
+                  <td class="p-4 font-medium text-gray-900 truncate max-w-50">
+                    {{ item.email }}
+                  </td>
+
+                  <td class="p-4">
+                    <span
+                      class="font-mono bg-gray-100/80 text-gray-800 px-3 py-1 rounded-lg text-sm font-bold border border-gray-200/60 tracking-wider"
+                    >
+                      {{ item.otp }}
+                    </span>
+                  </td>
+
+                  <td class="p-4 text-xs text-gray-500 whitespace-nowrap">
+                    {{ item.created_at | date: 'dd/MM/yyyy HH:mm' }}
+                  </td>
+
+                  <td class="p-4 whitespace-nowrap">
+                    @if (item.is_used) {
+                      <span
+                        class="inline-flex items-center gap-1.5 bg-green-50 text-green-700 px-2.5 py-1 rounded-full text-xs font-bold border border-green-200/60"
+                      >
+                        <span class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span
+                        >Used
+                      </span>
+                    } @else {
+                      <span
+                        class="inline-flex items-center gap-1.5 bg-red-50 text-red-700 px-2.5 py-1 rounded-full text-xs font-bold border border-red-200/60"
+                      >
+                        <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>Expired
+                      </span>
+                    }
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <div class="flex justify-end mt-6">
+          <button
+            (click)="openDeleteOTPModal()"
+            [disabled]="selectedOTP.length == 0"
+            class="px-5 py-2.5 text-sm font-medium rounded-xl bg-red-600 hover:bg-red-700 text-white transition-colors disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+
+  @if (showEditModal) {
+    <div
+      class="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50 p-4 transition-all animate-fadeIn"
+    >
+      <div
+        class="bg-white rounded-2xl shadow-2xl p-6 md:p-8 w-full max-w-md transform transition-all"
+      >
+        <h2 class="text-xl font-bold text-gray-900 mb-5 flex items-center gap-2">
+          <i class="bi bi-pencil-square text-gray-700"></i> Edit User
+        </h2>
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              Username
+            </label>
+            <input
+              [(ngModel)]="editData.username"
+              type="text"
+              placeholder="Masukkan username"
+              class="w-full border border-gray-200 rounded-xl px-4 py-2.5 mt-1.5 text-sm bg-gray-50/50 outline-none transition-all focus:border-black focus:bg-white focus:ring-1 focus:ring-black"
+            />
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              Email Address
+            </label>
+            <input
+              [(ngModel)]="editData.email"
+              type="email"
+              placeholder="contoh@email.com"
+              class="w-full border border-gray-200 rounded-xl px-4 py-2.5 mt-1.5 text-sm bg-gray-50/50 outline-none transition-all focus:border-black focus:bg-white focus:ring-1 focus:ring-black"
+            />
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              Role
+            </label>
+            <select
+              [(ngModel)]="editData.role"
+              class="w-full border border-gray-200 rounded-xl px-4 py-2.5 mt-1.5 text-sm bg-gray-50/50 outline-none transition-all focus:border-black focus:bg-white focus:ring-1 focus:ring-black appearance-none"
+            >
+              <option value="admin">Admin</option>
+              <option value="user">User</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              Password Baru
+            </label>
+            <input
+              [(ngModel)]="editData.password"
+              type="password"
+              placeholder="Kosongkan jika tidak diubah"
+              class="w-full border border-gray-200 rounded-xl px-4 py-2.5 mt-1.5 text-sm bg-gray-50/50 outline-none transition-all focus:border-black focus:bg-white focus:ring-1 focus:ring-black placeholder-gray-400"
+            />
+          </div>
+        </div>
+
+        <div class="flex justify-end gap-3 mt-6 border-t border-gray-100 pt-4">
+          <button
+            (click)="closeEditModal()"
+            class="px-5 py-2.5 text-sm font-medium rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors duration-200 active:scale-98"
+          >
+            Batal
+          </button>
+
+          <button
+            (click)="saveUser()"
+            class="px-5 py-2.5 text-sm font-medium rounded-xl bg-black hover:bg-gray-800 text-white transition-colors duration-200 shadow-sm active:scale-98"
+          >
+            Simpan Perubahan
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (showDeleteModal) {
+    <div class="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+      <div class="bg-white rounded-xl w-105 shadow-xl p-8">
+        <div class="flex justify-center mb-5">
+          <div class="bg-red-100 w-16 h-16 rounded-full flex items-center justify-center">
+            <i class="bi bi-trash text-red-600 text-3xl"></i>
+          </div>
+        </div>
+
+        <h2 class="text-2xl font-bold text-center">Hapus User</h2>
+
+        <p class="text-center text-gray-500 mt-4">
+          Apakah Anda yakin ingin menghapus
+
+          <span class="font-bold">
+            {{ selectedUsers.length }}
+          </span>
+
+          user?
+        </p>
+
+        <p class="text-center text-red-500 text-sm mt-2">Tindakan ini tidak dapat dibatalkan.</p>
+
+        <div class="flex justify-center gap-4 mt-8">
+          <button
+            type="button"
+            (click)="closeDeleteModal()"
+            class="px-5 py-2.5 text-sm font-medium rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors duration-200"
+          >
+            Batal
+          </button>
+
+          <button
+            type="button"
+            (click)="deleteUsers(); $event.stopPropagation()"
+            class="px-5 py-2.5 text-sm font-medium rounded-xl bg-red-600 hover:bg-red-700 text-white transition-colors duration-200 shadow-sm"
+          >
+            Ya, Hapus
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+  @if (showDeleteOTPModal) {
+    <div class="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+      <div class="bg-white rounded-xl w-105 shadow-xl p-8">
+        <div class="flex justify-center mb-5">
+          <div class="bg-red-100 w-16 h-16 rounded-full flex items-center justify-center">
+            <i class="bi bi-trash text-red-600 text-3xl"></i>
+          </div>
+        </div>
+
+        <h2 class="text-2xl font-bold text-center">Hapus OTP</h2>
+
+        <p class="text-center text-gray-500 mt-4">
+          Apakah Anda yakin ingin menghapus
+
+          <span class="font-bold">
+            {{ selectedOTP.length }}
+          </span>
+
+          OTP?
+        </p>
+
+        <p class="text-center text-red-500 text-sm mt-2">Tindakan ini tidak dapat dibatalkan.</p>
+
+        <div class="flex justify-center gap-4 mt-8">
+          <button
+            type="button"
+            (click)="closeDeleteOTPModal()"
+            class="px-5 py-2.5 text-sm font-medium rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors duration-200"
+          >
+            Batal
+          </button>
+
+          <button
+            type="button"
+            (click)="deleteOTP(); $event.stopPropagation()"
+            class="px-5 py-2.5 text-sm font-medium rounded-xl bg-red-600 hover:bg-red-700 text-white transition-colors duration-200 shadow-sm"
+          >
+            Ya, Hapus
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+  @if (showMessage) {
+    <div
+      class="fixed bottom-5 left-1/2 -translate-x-1/2 bg-green-600 text-white px-6 py-3.5 rounded-xl shadow-xl z-50 flex items-center gap-3 text-sm font-medium animate-bounce-short"
+    >
+      <i class="bi bi-check-circle-fill text-base"></i>
+      <span>{{ message }}</span>
+    </div>
+  }
 </div>

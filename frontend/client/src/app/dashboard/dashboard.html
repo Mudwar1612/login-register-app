@@ -1,64 +1,96 @@
 <div class="min-h-screen min-w-full flex flex-col bg-gray-50">
-    <nav class="h-16 bg-white flex items-center justify-between px-10 shadow-sm z-10">
-        <div class="flex items-center w-1/4">
-            <span class="font-bold text-lg tracking-wider text-black">DASHBOARD</span>
-        </div>
-        <div class="flex justify-center w-2/4">
-            <div class="flex items-center bg-gray-100 border border-gray-200 rounded-full px-4 py-2 w-64 transition-all duration-300 focus-within:border-black focus-within:bg-white focus-within:shadow-sm group">
-                <i class="bi bi-search text-sm text-gray-400 mr-2 transition-colors duration-300 group-focus-within:text-black"></i>
-                <input type="text" placeholder="Search" class="bg-transparent outline-none text-sm w-full text-gray-700 placeholder-gray-400">
-            </div>
-        </div>
-        <div class="flex items-center justify-end gap-4 text-sm w-1/4">
-            <button (click)="logout()" 
-                    class="px-5 py-2 rounded-lg bg-black text-white font-medium border border-transparent transition-colors duration-300 hover:bg-white hover:text-black hover:border-black">
-                Log Out
-            </button>
-        </div>
-    </nav>
-    <div class="w-full flex-1 bg-[url('/background.jpg')] bg-cover bg-center bg-no-repeat flex items-center justify-center p-6 relative">
-        @if (!editMode) {
-            <div class="bg-white/20 backdrop-blur-3xl p-8 rounded-3xl shadow-2xl border border-black/5 w-full max-w-md text-center transition-all duration-300 animate-in fade-in zoom-in-95">
-                <div class="w-20 h-20 bg-black text-white rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-4 shadow-md">
-                    {{ user?.username?.substring(0, 1) | uppercase }}
-                </div>
-                <h2 class="text-2xl font-bold text-black tracking-wide">Welcome, {{ user?.username }}</h2>
-                <p class="text-gray-800 text-sm font-medium mt-1 mb-6">Email: {{ user?.email }}</p>
-                <button (click)="editMode = true" 
-                        class="w-full bg-black text-white py-2.5 rounded-xl font-medium border-2 border-transparent transition-all duration-300 hover:bg-white hover:text-black hover:border-black">
-                    Edit Profile
-                </button>
-            </div>
-        }
-        @if (editMode) {
-            <div class="bg-white/20 backdrop-blur-3xl p-8 rounded-3xl shadow-2xl border border-black/5 w-full max-w-md transition-all duration-300 animate-in fade-in zoom-in-95 z-20">
-                <h3 class="text-xl font-bold text-black tracking-wide mb-1">Edit Profile</h3>
-                <p class="text-gray-700 text-sm font-medium mb-6">Perbarui informasi akun Anda di bawah ini.</p>
-                <div class="space-y-4 mb-6">
-                    <div class="flex flex-col gap-1.5">
-                        <label class="text-xs font-bold text-gray-800 uppercase tracking-wider">Username</label>
-                        <input [(ngModel)]="editUser.username" 
-                               placeholder="Enter username" 
-                               class="w-full border border-black/10 rounded-xl px-4 py-2.5 text-sm outline-none transition-all text-black placeholder-gray-500 bg-white/40 focus:bg-white/80 focus:border-black">
-                    </div>
-                    <div class="flex flex-col gap-1.5">
-                        <label class="text-xs font-bold text-gray-800 uppercase tracking-wider">Email Address</label>
-                        <input [(ngModel)]="editUser.email" 
-                               placeholder="Enter email address" 
-                               class="w-full border border-black/10 rounded-xl px-4 py-2.5 text-sm outline-none transition-all text-black placeholder-gray-500 bg-white/40 focus:bg-white/80 focus:border-black">
-                    </div>
-                </div>
-                <div class="flex items-center gap-3">
-                    <button (click)="editMode = false" 
-                            class="w-1/2 border border-black/20 text-black py-2.5 rounded-xl font-medium transition-colors duration-300 hover:bg-black/10">
-                        Cancel
-                    </button>
-                    <button (click)="updateProfile()" 
-                            class="w-1/2 bg-black text-white py-2.5 rounded-xl font-medium border border-transparent transition-colors duration-300 hover:bg-white hover:text-black hover:border-black">
-                        Save
-                    </button>
-                </div>
-            </div>
-        }
+  <nav class="h-16 bg-white flex items-center justify-between px-10 shadow-sm z-10">
+    <div class="flex items-center w-1/4">
+      <span class="font-bold text-lg tracking-wider text-black">DASHBOARD</span>
     </div>
+    <div class="flex justify-center w-2/4">
+      <div
+        class="flex items-center bg-gray-100 border border-gray-200 rounded-full px-4 py-2 w-64 transition-all duration-300 focus-within:border-black focus-within:bg-white focus-within:shadow-sm group"
+      >
+        <i
+          class="bi bi-search text-sm text-gray-400 mr-2 transition-colors duration-300 group-focus-within:text-black"
+        ></i>
+        <input
+          type="text"
+          placeholder="Search"
+          class="bg-transparent outline-none text-sm w-full text-gray-700 placeholder-gray-400"
+        />
+      </div>
+    </div>
+    <div class="flex items-center justify-end gap-4 text-sm w-1/4">
+      <button
+        (click)="logout()"
+        class="px-5 py-2 rounded-lg bg-black text-white font-medium border border-transparent transition-colors duration-300 hover:bg-white hover:text-black hover:border-black"
+      >
+        Log Out
+      </button>
+    </div>
+  </nav>
+  <div
+    class="w-full flex-1 bg-[url('/background.jpg')] bg-cover bg-center bg-no-repeat flex items-center justify-center p-6 relative"
+  >
+    @if (!editMode) {
+      <div
+        class="bg-white/20 backdrop-blur-3xl p-8 rounded-3xl shadow-2xl border border-black/5 w-full max-w-md text-center transition-all duration-300 animate-in fade-in zoom-in-95"
+      >
+        <div
+          class="w-20 h-20 bg-black text-white rounded-full flex items-center justify-center text-3xl font-bold mx-auto mb-4 shadow-md"
+        >
+          {{ user?.username?.substring(0, 1) | uppercase }}
+        </div>
+        <h2 class="text-2xl font-bold text-black tracking-wide">Welcome, {{ user?.username }}</h2>
+        <p class="text-gray-800 text-sm font-medium mt-1 mb-6">Email: {{ user?.email }}</p>
+        <button
+          (click)="editMode = true"
+          class="w-full bg-black text-white py-2.5 rounded-xl font-medium border-2 border-transparent transition-all duration-300 hover:bg-white hover:text-black hover:border-black"
+        >
+          Edit Profile
+        </button>
+      </div>
+    }
+    @if (editMode) {
+      <div
+        class="bg-white/20 backdrop-blur-3xl p-8 rounded-3xl shadow-2xl border border-black/5 w-full max-w-md transition-all duration-300 animate-in fade-in zoom-in-95 z-20"
+      >
+        <h3 class="text-xl font-bold text-black tracking-wide mb-1">Edit Profile</h3>
+        <p class="text-gray-700 text-sm font-medium mb-6">
+          Perbarui informasi akun Anda di bawah ini.
+        </p>
+        <div class="space-y-4 mb-6">
+          <div class="flex flex-col gap-1.5">
+            <label class="text-xs font-bold text-gray-800 uppercase tracking-wider">Username</label>
+            <input
+              [(ngModel)]="editUser.username"
+              placeholder="Enter username"
+              class="w-full border border-black/10 rounded-xl px-4 py-2.5 text-sm outline-none transition-all text-black placeholder-gray-500 bg-white/40 focus:bg-white/80 focus:border-black"
+            />
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <label class="text-xs font-bold text-gray-800 uppercase tracking-wider"
+              >Email Address</label
+            >
+            <input
+              [(ngModel)]="editUser.email"
+              placeholder="Enter email address"
+              class="w-full border border-black/10 rounded-xl px-4 py-2.5 text-sm outline-none transition-all text-black placeholder-gray-500 bg-white/40 focus:bg-white/80 focus:border-black"
+            />
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <button
+            (click)="editMode = false"
+            class="w-1/2 border border-black/20 text-black py-2.5 rounded-xl font-medium transition-colors duration-300 hover:bg-black/10"
+          >
+            Cancel
+          </button>
+          <button
+            (click)="updateProfile()"
+            class="w-1/2 bg-black text-white py-2.5 rounded-xl font-medium border border-transparent transition-colors duration-300 hover:bg-white hover:text-black hover:border-black"
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    }
+  </div>
 </div>

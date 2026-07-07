@@ -1,45 +1,30 @@
+from datetime import timedelta
+
+from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
-from datetime import timedelta
-from django.contrib.auth.models import User
+
 
 class EmailOTP(models.Model):
     email = models.EmailField()
     otp = models.CharField(max_length=6)
     created_at = models.DateTimeField(auto_now_add=True)
+    is_used = models.BooleanField(default=False)
+
+    @property
+    def is_expired(self):
+        return timezone.now() > self.created_at + timedelta(minutes=3)
 
     def __str__(self):
         return self.email
-    
-    def is_expired(self):
-        return timezone.now() > self.created_at + timedelta(minutes=3)
-    
+
+
 class UserProfile(models.Model):
-    ROLE_CHOICES = (
-        ('user','User'),
-        ('admin','Admin'),
-    )
-
-    user = models.OneToOneField(
-        User,
-        on_delete=models.CASCADE
-    )
-
-
-    role = models.CharField(
-        max_length=10,
-        choices=ROLE_CHOICES,
-        default='user'
-    )
-
-    is_suspended = models.BooleanField(
-        default=False
-    )
-
-    suspended_until = models.DateTimeField(
-        null=True,
-        blank=True
-    )
+    ROLE_CHOICES = (("user", "User"), ("admin", "Admin"))
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default="user")
+    is_suspended = models.BooleanField(default=False)
+    suspended_until = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return self.user.username

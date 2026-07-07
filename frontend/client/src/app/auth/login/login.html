@@ -1,29 +1,53 @@
 <div class="h-55 flex flex-col justify-center">
-    @if (!errorMessage) {
-        <input class="w-full border border-gray-300 rounded-lg p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-black" [(ngModel)]="username" (input)="errorMessage=''" placeholder="username">
-        <input class="w-full border border-gray-300 rounded-lg p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-black" [(ngModel)]="password" (input)="errorMessage=''" type="password" placeholder="password">
-        <button class="w-full bg-black text-white py-3 rounded-lg font-medium transition-all duration-300 border-2 border-transparent flex items-center justify-center min-h-13 hover:bg-gray-800 hover:text-white hover:border-transparent disabled:bg-black disabled:text-white disabled:border-transparent disabled:cursor-not-allowed" type="button" (click)="login()" [disabled]="loading">
-            @if (!loading) {
-                <span>Login</span>
-            } @else {
-                <span class="flex items-center justify-center">
-                    <span>Loading</span>
-                    <span class="flex ml-0.5 w-6 text-left">
-                        <span class="animate-[pulse_1.2s_infinite] [animation-delay:0s]">.</span>
-                        <span class="opacity-0 animate-[pulse_1.2s_infinite] [animation-delay:0.3s]">.</span>
-                        <span class="opacity-0 animate-[pulse_1.2s_infinite] [animation-delay:0.6s]">.</span>
-                    </span>
-                </span>
-            }
-        </button>
-    } @else {
-        <div class="mt-6 flex flex-col gap-4">
-            <div tabindex="0" class="rounded-xl border border-gray-300 p-6 outline-none transition-all duration-200 cursor-pointer focus:ring-2 focus:ring-black focus:border-transparent flex flex-col items-center justify-center text-center">
-                <i class="bi bi-shield-exclamation text-3xl text-black"></i>
-                <h2 class="text-xl font-bold mt-2 text-black">Login Gagal</h2>
-                <p class="mt-1 text-sm text-gray-600">{{errorMessage}}</p>
-            </div>
-            <button (click)="errorMessage=''" class="w-full bg-black text-white py-3 rounded-lg font-medium transition-all duration-300 hover:bg-gray-800">Kembali</button>
-        </div>
-    }
+  @if (!errorMessage) {
+    <input
+      class="w-full border border-gray-300 rounded-lg p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-black"
+      [(ngModel)]="username"
+      (input)="errorMessage = ''"
+      placeholder="username"
+    />
+    <input
+      class="w-full border border-gray-300 rounded-lg p-3 mb-4 focus:outline-none focus:ring-2 focus:ring-black"
+      [(ngModel)]="password"
+      (input)="errorMessage = ''"
+      type="password"
+      placeholder="password"
+    />
+    <button
+      class="w-full bg-black text-white py-3 rounded-lg font-medium transition-all duration-300 border-2 border-transparent flex items-center justify-center min-h-13 hover:bg-gray-800 hover:text-white hover:border-transparent disabled:bg-black disabled:text-white disabled:border-transparent disabled:cursor-not-allowed"
+      type="button"
+      (click)="login()"
+      [disabled]="loading"
+    >
+      @if (!loading) {
+        <span>Login</span>
+      } @else {
+        <span class="flex items-center justify-center">
+          <span>Loading</span>
+          <span class="flex ml-0.5 w-6 text-left">
+            <span class="animate-[pulse_1.2s_infinite] [animation-delay:0s]">.</span>
+            <span class="opacity-0 animate-[pulse_1.2s_infinite] [animation-delay:0.3s]">.</span>
+            <span class="opacity-0 animate-[pulse_1.2s_infinite] [animation-delay:0.6s]">.</span>
+          </span>
+        </span>
+      }
+    </button>
+  } @else {
+    <div class="mt-6 flex flex-col gap-4">
+      <div
+        tabindex="0"
+        class="rounded-xl border border-gray-300 p-6 outline-none transition-all duration-200 cursor-pointer focus:ring-2 focus:ring-black focus:border-transparent flex flex-col items-center justify-center text-center"
+      >
+        <i class="bi bi-shield-exclamation text-3xl text-black"></i>
+        <h2 class="text-xl font-bold mt-2 text-black">Login Gagal</h2>
+        <p class="mt-1 text-sm text-gray-600">{{ errorMessage }}</p>
+      </div>
+      <button
+        (click)="errorMessage = ''"
+        class="w-full bg-black text-white py-3 rounded-lg font-medium transition-all duration-300 hover:bg-gray-800"
+      >
+        Kembali
+      </button>
+    </div>
+  }
 </div>
